@@ -1,8 +1,63 @@
-import logo from "./logo.svg";
 import "./App.css";
 import { useEffect } from "react";
 
 function App() {
+  useEffect(() => {
+    let startBox;
+    let endBox;
+    let timeout;
+    let areStartAndEndPointsPlaced = false;
+    const resizeHandler = () => {
+      window.clearTimeout(timeout);
+      const { innerWidth: width, innerHeight: height } = window;
+
+      window.setTimeout(() => {
+        if (startBox) {
+          startBox.innerHTML = "";
+        }
+        if (endBox) {
+          endBox.innerHTML = "";
+        }
+        startBox = document.elementFromPoint(
+          Math.round(width / 4),
+          Math.round(height / 2)
+        );
+
+        endBox = document.elementFromPoint(
+          Math.round(width - width / 4),
+          Math.round(height / 2)
+        );
+        if (
+          startBox != null &&
+          endBox != null &&
+          typeof startBox.id != "undefined" &&
+          startBox.id != "" &&
+          startBox.id.startsWith("box") &&
+          typeof endBox.id != "undefined" &&
+          endBox.id != "" &&
+          endBox.id.startsWith("box")
+        ) {
+          startBox.innerHTML =
+            "<div class='h-full bg-slate-400 border border-slate-200 rounded-full'></div>";
+          endBox.innerHTML =
+            "<div class='h-full bg-slate-400 border border-slate-200 rounded-full'></div>";
+          areStartAndEndPointsPlaced = true;
+        } else {
+          areStartAndEndPointsPlaced = false;
+        }
+      });
+    };
+
+    window.addEventListener("resize", resizeHandler, 500);
+    const placeStartAndEndPoints = () => {
+      if (!areStartAndEndPointsPlaced) {
+        resizeHandler();
+      }
+    };
+
+    placeStartAndEndPoints();
+    window.removeEventListener("resize", resizeHandler);
+  }, []);
   const createBoxes = () => {
     const boxes = [];
     for (let i = 0; i < 700; i++) {

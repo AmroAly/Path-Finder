@@ -1,10 +1,4 @@
 const findShortestPath = (start, end) => {
-  // const timeout = (key, obj, i) =>
-  //   setTimeout(() => obj[key].classList.add("visited"), 100 * i);
-  // let i = 1;
-  // for (let key in neighbors) {
-  //   timeout(key, neighbors, i++);
-  // }
   const boxes = document.querySelectorAll(".grid-box");
   const numOfVertices = boxes.length;
   const minDistances = Array(numOfVertices).fill(Number.POSITIVE_INFINITY);
@@ -80,11 +74,7 @@ const findShortestPath = (start, end) => {
       predecessors[destination] = vertex;
     }
   }
-  // minDistances.sort();
-  console.log(minDistances);
-  console.log(predecessors);
-  console.log(pathFound);
-  console.log("path =>> ", path);
+
   return minDistances;
 };
 

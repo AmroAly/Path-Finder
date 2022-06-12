@@ -38,9 +38,9 @@ const Grid = ({ flip }) => {
           endBox.id.startsWith("box")
         ) {
           startBox.innerHTML =
-            "<div class='h-full bg-slate-400 border border-slate-200 rounded-full'></div>";
+            "<div class='h-full bg-slate-400 border border-slate-200 rounded-full' id='start-box'></div>";
           endBox.innerHTML =
-            "<div class='h-full bg-slate-400 border border-slate-200 rounded-full'></div>";
+            "<div class='h-full bg-slate-400 border border-slate-200 rounded-full' id='end-box'></div>";
           areStartAndEndPointsPlaced = true;
         } else {
           areStartAndEndPointsPlaced = false;
@@ -59,7 +59,7 @@ const Grid = ({ flip }) => {
   return (
     <main>
       <div className="container mx-auto bg-slate-50" id="grid">
-        <div className="flex flex-wrow flex-wrap mx-auto justify-between">
+        <div className="flex flex-wrow flex-wrap mx-auto">
           <Boxes flip={flip} />
         </div>
       </div>

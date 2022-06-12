@@ -2,9 +2,9 @@ const Footer = () => (
   <footer className="container mx-auto flex justify-center">
     <div>
       <p className="text-center">
-        Built with Love by{" "}
+        Built with ❤️ by{" "}
         <a
-          href="https://www.linkedin.com/in/amr-aly/"
+          href="https://github.com/AmroAly"
           className="text-violet-600"
           target="_blank"
         >

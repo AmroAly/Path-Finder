@@ -7,8 +7,8 @@ const Boxes = ({ flip }) => {
       target,
     } = e;
     if (id && id.startsWith("box")) {
-      target.classList.add("bg-slate-900");
-      //   target.classList.add("block");
+      target.classList.add("bg-slate-900", "border-none");
+      target.classList.add("block");
     } else {
       onMouseUpHandler();
     }
@@ -25,8 +25,7 @@ const Boxes = ({ flip }) => {
   useEffect(() => {
     const blocks = document.querySelectorAll(".bg-slate-900");
     blocks.forEach((b) => {
-      //   b.classList.remove("block");
-      b.classList.remove("bg-slate-900");
+      b.classList.remove("bg-slate-900", "border-none", "block");
     });
   }, [flip]);
 
@@ -34,7 +33,7 @@ const Boxes = ({ flip }) => {
   for (let i = 0; i < 700; i++) {
     boxes.push(
       <div
-        className="border h-10 w-10 border-slate-200 hover:bg-violet-600  rounded"
+        className="border grid-box h-7 w-7 border-slate-200 hover:bg-violet-600 box-border"
         id={`box-${i}`}
         key={i}
         onMouseDown={onMouseDownHandler}

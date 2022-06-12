@@ -1,6 +1,10 @@
-const Header = ({ onReset }) => {
+const Header = ({ onReset, onFind }) => {
   const onResetHandler = () => {
     onReset();
+  };
+
+  const findShortestPathHandler = () => {
+    onFind();
   };
   return (
     <nav className="container relative mx-auto flex items-center justify-between p-8 bg-violet-600 border-2 border-slate-900 rounded border-b-8">
@@ -13,7 +17,10 @@ const Header = ({ onReset }) => {
         </a>
       </div>
       <div>
-        <button className="text-xl border-2 border-slate-900 rounded border-b-8  p-2 bg-yellow-300">
+        <button
+          className="text-xl border-2 border-slate-900 rounded border-b-8  p-2 bg-yellow-300"
+          onClick={findShortestPathHandler}
+        >
           Find Shortest Path
         </button>
       </div>

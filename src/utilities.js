@@ -25,6 +25,7 @@ const findShortestPath = (start, end) => {
     const edges = getNeighbors(document.querySelector(`#box-${vertex}`));
 
     const distance = currentMinDistance + 1;
+    console.log(edges);
     for (let edge in edges) {
       if (!edges[edge]) continue;
 
@@ -41,15 +42,16 @@ const findShortestPath = (start, end) => {
         setTimeout(
           () =>
             path.forEach((node, j) =>
-              setTimeout(
-                () =>
-                  document
-                    .querySelector(`#box-${node}`)
-                    .classList.add("border-none", "bg-emerald-400"),
-                50 * (j + 1)
-              )
+              setTimeout(() => {
+                document
+                  .querySelector(`#box-${node}`)
+                  .classList.remove("bg-violet-600");
+                document
+                  .querySelector(`#box-${node}`)
+                  .classList.add("border-none", "bg-emerald-400");
+              }, 50 * (j + 1))
             ),
-          1000
+          2000
         );
         pathFound = true;
         break;
@@ -94,13 +96,13 @@ const getVertexWithMinDistance = (distances, visited) => {
 };
 
 const getNeighbors = (element) => {
-  const { innerHeight: height } = window;
-  const y = window.scrollY + element.getBoundingClientRect().top;
+  const width = element.offsetWidth;
+  const y = element.getBoundingClientRect().top;
   const { x } = element.getBoundingClientRect();
-  const left = document.elementFromPoint(x - 20, y);
-  const top = document.elementFromPoint(x, y - 20);
-  const right = document.elementFromPoint(x + 29, y);
-  const bottom = document.elementFromPoint(x, y + 29);
+  const left = document.elementFromPoint(x - width, y);
+  const top = document.elementFromPoint(x, y - width);
+  const right = document.elementFromPoint(x + width, y);
+  const bottom = document.elementFromPoint(x, y + width);
 
   return {
     top,

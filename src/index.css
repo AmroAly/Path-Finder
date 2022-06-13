@@ -2,7 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
+#logo {
+    margin-top: -6px;
+}
+
 .visited{
     background-color: teal;
     transition: all 500ms;
+}
+
+.v-grid {
+    grid-template-columns: repeat(61, 1fr);
+    border-top: 1px solid rgb(167 243 208);
+    border-left: 1px solid rgb(167 243 208);
+}
+
+
+.v-grid > div {
+    height: 25px;
+    width: 25px;
+}
+
+@media screen and (max-width: 600px) {
+    .v-grid {
+    grid-template-columns: repeat(40, 1fr);
+    }
+    .v-grid > div {
+        width: 15px;
+        height: 15px;
+    }
+}
+@media screen and (min-width: 601px) {
+    .v-grid {
+        grid-template-columns: repeat(40, 1fr);
+    }
+
+    .v-grid>div {
+        width: 20px;
+        height: 20px;
+    }
+
+}
+
+@media screen and (min-width: 1020px) {
+    .v-grid>div {
+            width: 25px;
+            height: 25px;
+        }
+}
+
+@media screen and (min-width: 1280px) {
+    .v-grid {
+        grid-template-columns: repeat(62, 1fr);
+    }
 }

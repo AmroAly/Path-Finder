@@ -30,10 +30,18 @@ const Boxes = ({ flip }) => {
   }, [flip]);
 
   const boxes = [];
-  for (let i = 0; i < 700; i++) {
+  for (let i = 0; i < 2600; i++) {
     boxes.push(
+      // <div
+      //   className="border grid-box h-5 w-5 border-emerald-200 hover:bg-violet-600 box-border"
+      //   id={`box-${i}`}
+      //   key={i}
+      //   onMouseDown={onMouseDownHandler}
+      //   onMouseUp={onMouseUpHandler}
+      // ></div>
       <div
-        className="border grid-box h-7 w-7 border-slate-200 hover:bg-violet-600 box-border"
+        className="border-b border-r border-emerald-200 text-center
+      hover:bg-violet-600 box-border grid-box"
         id={`box-${i}`}
         key={i}
         onMouseDown={onMouseDownHandler}

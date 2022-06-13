@@ -73,8 +73,9 @@ const Grid = ({ flip }) => {
 
   return (
     <main>
-      <div className="container mx-auto bg-slate-50" id="grid">
-        <div className="flex flex-wrow flex-wrap mx-auto">
+      <div className="container mx-auto bg-slate-50 max-w-screen-2xl" id="grid">
+        {/* <div className="flex flex-wrow flex-wrap mx-auto justify-center"> */}
+        <div className="grid v-grid max-w-screen-2xl">
           <Boxes flip={flip} />
         </div>
       </div>

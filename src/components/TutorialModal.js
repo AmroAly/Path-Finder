@@ -19,7 +19,7 @@ const TutorialModal = ({ onClickSkip }) => {
             </p>
           </div>
           <div>
-            <img src="/images/button.png" className="pt-8" id="btn-img" />
+            <img src="./images/button.png" className="pt-8" id="btn-img" />
           </div>
         </div>
         {/* Footer */}

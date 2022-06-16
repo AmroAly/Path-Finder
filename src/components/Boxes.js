@@ -14,6 +14,11 @@ const Boxes = ({ flip }) => {
     }
   };
 
+  const onDrag = (e) => {
+    e.stopPropagation();
+    console.log("start");
+  };
+
   const onMouseDownHandler = (e) => {
     document.addEventListener("mouseout", selectBoxes);
   };
@@ -32,16 +37,9 @@ const Boxes = ({ flip }) => {
   const boxes = [];
   for (let i = 0; i < 2600; i++) {
     boxes.push(
-      // <div
-      //   className="border grid-box h-5 w-5 border-emerald-200 hover:bg-violet-600 box-border"
-      //   id={`box-${i}`}
-      //   key={i}
-      //   onMouseDown={onMouseDownHandler}
-      //   onMouseUp={onMouseUpHandler}
-      // ></div>
       <div
         className="border-b border-r border-emerald-200 text-center
-      hover:bg-violet-600 box-border grid-box"
+       box-border grid-box"
         id={`box-${i}`}
         key={i}
         onMouseDown={onMouseDownHandler}

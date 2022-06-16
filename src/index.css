@@ -56,3 +56,11 @@
         grid-template-columns: repeat(62, 1fr);
     }
 }
+
+#modal {
+    top: 15%;
+}
+
+#btn-img {
+    max-width: 200px;
+}

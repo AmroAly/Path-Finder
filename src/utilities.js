@@ -1,4 +1,12 @@
-const findShortestPath = (start, end) => {
+const findShortestPath = () => {
+  const startBox = document.querySelector("#start-box");
+  const endBox = document.querySelector("#end-box");
+  if (!startBox || !endBox) return;
+
+  const start = startBox.parentElement;
+  const end = endBox.parentElement;
+  if (start == end) return;
+
   const boxes = document.querySelectorAll(".grid-box");
   const numOfVertices = boxes.length;
   const minDistances = Array(numOfVertices).fill(Number.POSITIVE_INFINITY);
@@ -25,7 +33,6 @@ const findShortestPath = (start, end) => {
     const edges = getNeighbors(document.querySelector(`#box-${vertex}`));
 
     const distance = currentMinDistance + 1;
-    console.log(edges);
     for (let edge in edges) {
       if (!edges[edge]) continue;
 
@@ -49,7 +56,7 @@ const findShortestPath = (start, end) => {
                 document
                   .querySelector(`#box-${node}`)
                   .classList.add("border-none", "bg-emerald-400");
-              }, 50 * (j + 1))
+              }, 50 * j)
             ),
           2000
         );
@@ -112,4 +119,55 @@ const getNeighbors = (element) => {
   };
 };
 
-export { findShortestPath };
+const initStartAndEndPoints = () => {
+  let startBox;
+  let endBox;
+  const { innerWidth: width, innerHeight: height } = window;
+
+  startBox = document.elementFromPoint(
+    Math.round(width / 4),
+    Math.round(height / 2)
+  );
+
+  endBox = document.elementFromPoint(
+    Math.round(width - width / 4),
+    Math.round(height / 2)
+  );
+
+  if (
+    startBox != null &&
+    endBox != null &&
+    typeof startBox.id != "undefined" &&
+    startBox.id != "" &&
+    startBox.id.startsWith("box") &&
+    typeof endBox.id != "undefined" &&
+    endBox.id != "" &&
+    endBox.id.startsWith("box")
+  ) {
+    startBox.innerHTML =
+      "<div class='h-full bg-cyan-900 border border-slate-200 rounded-full' id='start-box' draggable='true'></div>";
+
+    endBox.innerHTML =
+      "<div class='h-full bg-cyan-900	 border border-slate-200 rounded-full' id='end-box' draggable='true'></div>";
+  }
+};
+
+(function () {
+  // By default, data/elements cannot be dropped in other elements. To allow a drop, we must prevent the default handling of the element
+  document.addEventListener("dragover", function (event) {
+    event.preventDefault();
+  });
+
+  document.addEventListener("drop", (e) => {
+    e.preventDefault();
+    const id = e.dataTransfer.getData("id");
+    e.target.appendChild(document.getElementById(id));
+  });
+
+  document.addEventListener("dragstart", (e) => {
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("id", e.target.id);
+  });
+})();
+
+export { findShortestPath, initStartAndEndPoints };

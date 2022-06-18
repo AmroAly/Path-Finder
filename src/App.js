@@ -3,7 +3,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Grid from "./components/Grid";
 import { findShortestPath, initStartAndEndPoints } from "./utilities";
-import TutorialModal from "./components/TutorialModal";
+import TutorialModal from "./components/tutorial/TutorialModal";
 
 function App() {
   const [flip, setFlip] = useState(false);

@@ -1,5 +1,5 @@
 const TutorialTwo = () => (
-  <div>
+  <div className="hidden" id="tutorial-two">
     <div>
       <p className="p-8 text-xl">
         Click the yellow button over there to see the Magic happens!

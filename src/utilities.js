@@ -170,4 +170,18 @@ const initStartAndEndPoints = () => {
   });
 })();
 
-export { findShortestPath, initStartAndEndPoints };
+const animateRemoval = (tutorialToRemove) => {
+  console.log(tutorialToRemove);
+  let elementIdToHide;
+  if (tutorialToRemove === 1) elementIdToHide = "#tutorial-one";
+  if (tutorialToRemove === 2) elementIdToHide = "#tutorial-two";
+  if (!tutorialToRemove) return;
+  const elementToHide = document.querySelector(elementIdToHide);
+  let elementIdToDisplay =
+    tutorialToRemove == 1 ? "#tutorial-two" : "#tutorial-one";
+  let elementToDisplay = document.querySelector(elementIdToDisplay);
+  elementToHide.classList.add("hidden");
+  elementToDisplay.classList.remove("hidden");
+};
+
+export { findShortestPath, initStartAndEndPoints, animateRemoval };

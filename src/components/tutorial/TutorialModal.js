@@ -1,13 +1,17 @@
 import { useState } from "react";
 import TutorialOne from "./TutorialOne";
 import TutorialTwo from "./TutorialTwo";
+import { animateRemoval } from "../../utilities";
 
 const TutorialModal = ({ onClickSkip }) => {
+  let timeout;
   const [tutorial, setTutorial] = useState(1);
   const getNextTutorial = () => {
+    animateRemoval(tutorial);
     if (tutorial < 2) setTutorial(tutorial + 1);
   };
   const goToPreviousTutorial = () => {
+    animateRemoval(tutorial);
     if (tutorial > 1) setTutorial(tutorial - 1);
   };
   const renderModelContent = () => {
@@ -16,8 +20,6 @@ const TutorialModal = ({ onClickSkip }) => {
         return <TutorialOne />;
       case 2:
         return <TutorialTwo />;
-      default:
-        return <TutorialOne />;
     }
   };
   return (
@@ -35,7 +37,9 @@ const TutorialModal = ({ onClickSkip }) => {
         <small className="absolute right-4 top-6">{tutorial} / 2</small>
         {/* Body */}
         <div className="flex flex-wrap justify-center p-8">
-          {renderModelContent()}
+          {/* {renderModelContent()} */}
+          <TutorialOne />
+          <TutorialTwo />
         </div>
         {/* Footer */}
         <div className="p-6 flex flex-wrap justify-between items-center">

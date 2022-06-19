@@ -5,7 +5,7 @@ import TutorialTwo from "./TutorialTwo";
 const TutorialModal = ({ onClickSkip }) => {
   const [tutorial, setTutorial] = useState(1);
   const getNextTutorial = () => {
-    setTutorial(tutorial + 1);
+    if (tutorial < 2) setTutorial(tutorial + 1);
   };
   const goToPreviousTutorial = () => {
     if (tutorial > 1) setTutorial(tutorial - 1);
@@ -35,18 +35,6 @@ const TutorialModal = ({ onClickSkip }) => {
         <small className="absolute right-4 top-6">{tutorial} / 2</small>
         {/* Body */}
         <div className="flex flex-wrap justify-center p-8">
-          {/* <div>
-            <p className="p-8 text-xl">
-              Click the yellow button over there to see the Magic happens!
-            </p>
-          </div>
-          <div>
-            <img
-              src={process.env.PUBLIC_URL + "/images/button.png"}
-              className="pt-8"
-              id="btn-img"
-            />
-          </div> */}
           {renderModelContent()}
         </div>
         {/* Footer */}
@@ -68,8 +56,9 @@ const TutorialModal = ({ onClickSkip }) => {
               Back
             </button>
             <button
-              className="bg-indigo-500 p-2 text-white rounded w-28"
+              className="bg-indigo-500 p-2 text-white rounded w-28 disabled:opacity-75"
               onClick={getNextTutorial}
+              disabled={tutorial >= 2}
             >
               Next
             </button>

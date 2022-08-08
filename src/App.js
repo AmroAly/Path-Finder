@@ -2,20 +2,28 @@ import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Grid from "./components/Grid";
-import { findShortestPath, initStartAndEndPoints } from "./utilities";
+import {
+  findShortestPath,
+  initStartAndEndPoints,
+  shakeButton,
+} from "./utilities";
 import TutorialModal from "./components/tutorial/TutorialModal";
 
 function App() {
-  const [flip, setFlip] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(true);
+  const [algorithm, setAlgorithm] = useState("");
+  const algorithms = ["aAlgorithm", "Dijkstra"];
 
-  const onReset = () => {
-    setFlip(!flip);
+  const onChangeAlgorithm = (algo) => {
+    setAlgorithm(algo);
   };
 
   const onFindShortestPath = () => {
-    // get the start and end elemnts
-    findShortestPath();
+    if (!algorithm || !algorithms.includes(algorithm)) {
+      shakeButton();
+      return;
+    }
+    findShortestPath(algorithm);
   };
 
   const skipTutorial = () => {
@@ -38,8 +46,11 @@ function App() {
   return (
     <div className="container mx-auto">
       <div className="max-h-screen overflow-clip">
-        <Header onReset={onReset} onFind={onFindShortestPath} />
-        <Grid flip={flip} />
+        <Header
+          onFind={onFindShortestPath}
+          onChangeAlgorithm={onChangeAlgorithm}
+        />
+        <Grid />
         {isModalOpen && <TutorialModal onClickSkip={skipTutorial} />}
       </div>
       <Footer />

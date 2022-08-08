@@ -1,4 +1,4 @@
-const findShortestPath = () => {
+const findShortestPath = (algorithm) => {
   const startBox = document.querySelector("#start-box");
   const endBox = document.querySelector("#end-box");
   if (!startBox || !endBox) return;
@@ -7,6 +7,16 @@ const findShortestPath = () => {
   const end = endBox.parentElement;
   if (start == end) return;
 
+  removeVisitedBoxes();
+
+  if (algorithm === "aAlgorithm") {
+    aAlgorithm(startBox, endBox);
+  } else if (algorithm === "Dijkstra") {
+    dijkstraAlgorithm(start, end);
+  }
+};
+
+const dijkstraAlgorithm = (start, end) => {
   const boxes = document.querySelectorAll(".grid-box");
   const numOfVertices = boxes.length;
   const minDistances = Array(numOfVertices).fill(Number.POSITIVE_INFINITY);
@@ -14,6 +24,7 @@ const findShortestPath = () => {
   const startId = parseInt(start.id.substring(4));
   const endId = parseInt(end.id.substring(4));
   const path = [];
+  const nodesToVisualize = [];
   minDistances[startId] = 0;
   let visited = new Set();
 
@@ -29,7 +40,7 @@ const findShortestPath = () => {
       break;
 
     visited.add(vertex);
-
+    nodesToVisualize.push(`box-${vertex}`);
     const edges = getNeighbors(document.querySelector(`#box-${vertex}`));
 
     const distance = currentMinDistance + 1;
@@ -46,20 +57,6 @@ const findShortestPath = () => {
           path.push(prev);
         }
         path.reverse();
-        setTimeout(
-          () =>
-            path.forEach((node, j) =>
-              setTimeout(() => {
-                document
-                  .querySelector(`#box-${node}`)
-                  .classList.remove("bg-violet-600");
-                document
-                  .querySelector(`#box-${node}`)
-                  .classList.add("border-none", "bg-emerald-400");
-              }, 50 * j)
-            ),
-          2000
-        );
         pathFound = true;
         break;
       }
@@ -72,7 +69,7 @@ const findShortestPath = () => {
         continue;
       }
 
-      setTimeout(() => edges[edge].classList.add("bg-violet-600"), 2 * i++);
+      // setTimeout(() => edges[edge].classList.add("visited"), 2 * i++);
       const newPathDistance = distance;
       const currentDestinationDistance = minDistances[destination];
 
@@ -83,6 +80,8 @@ const findShortestPath = () => {
       predecessors[destination] = vertex;
     }
   }
+
+  visualize(nodesToVisualize, "Dijkstra");
 
   return minDistances;
 };
@@ -117,6 +116,16 @@ const getNeighbors = (element) => {
     right,
     left,
   };
+};
+
+const visualize = (elementsIDs, algorithm) => {
+  const timeoutInMS = algorithm === "Dijkstra" ? 5 : 50;
+  console.log(timeoutInMS);
+  elementsIDs.forEach((elId, x) => {
+    setTimeout(() => {
+      document.querySelector(`#${elId}`).classList.add("visited");
+    }, timeoutInMS * x);
+  });
 };
 
 const initStartAndEndPoints = () => {
@@ -170,18 +179,258 @@ const initStartAndEndPoints = () => {
   });
 })();
 
-const animateRemoval = (tutorialToRemove) => {
-  console.log(tutorialToRemove);
-  let elementIdToHide;
-  if (tutorialToRemove === 1) elementIdToHide = "#tutorial-one";
-  if (tutorialToRemove === 2) elementIdToHide = "#tutorial-two";
-  if (!tutorialToRemove) return;
-  const elementToHide = document.querySelector(elementIdToHide);
-  let elementIdToDisplay =
-    tutorialToRemove == 1 ? "#tutorial-two" : "#tutorial-one";
-  let elementToDisplay = document.querySelector(elementIdToDisplay);
-  elementToHide.classList.add("hidden");
-  elementToDisplay.classList.remove("hidden");
+const addModalView = (elementToDisplay) => {
+  console.log(elementToDisplay);
+  let elementIdToDisplay;
+  if (elementToDisplay === 1) elementIdToDisplay = "tutorial-one";
+  if (elementToDisplay === 2) elementIdToDisplay = "tutorial-two";
+  if (elementToDisplay === 3) elementIdToDisplay = "tutorial-three";
+  if (!elementIdToDisplay) return;
+  const elements = document.querySelector("#modal-content").children;
+  for (let k of elements) {
+    if (k.id == elementIdToDisplay) {
+      k.classList.remove("hidden");
+    } else {
+      k.classList.add("hidden");
+    }
+  }
 };
 
-export { findShortestPath, initStartAndEndPoints, animateRemoval };
+const aAlgorithm = (startBox, endBox) => {
+  if (!startBox || !endBox) return;
+  const nodes = initializeNodes(document.querySelectorAll(".grid-box"));
+  const startNode = nodes[startBox.parentElement.id];
+  const endNode = nodes[endBox.parentElement.id];
+  if (!startNode || !endNode) return;
+
+  startNode.distanceFromStart = 0;
+  startNode.estimatedDistanceToEnd = caculateManhattanDistance(
+    startNode,
+    endNode
+  );
+
+  const nodesToVisitArr = [];
+  nodesToVisitArr.push(startNode);
+  const nodesToVisit = new MinHeap(nodesToVisitArr);
+
+  let i = 0;
+  while (!nodesToVisit.isEmpty()) {
+    let currentMinDistanceNode = nodesToVisit.remove();
+
+    if (currentMinDistanceNode == endNode) {
+      break;
+    }
+
+    const { x, y } = currentMinDistanceNode;
+
+    let neighbors = getNeighbors(document.elementFromPoint(x, y));
+
+    for (let neighbor in neighbors) {
+      if (
+        !neighbors[neighbor] ||
+        neighbors[neighbor].classList.contains("block")
+      ) {
+        continue;
+      }
+
+      let neighborNode = nodes[neighbors[neighbor].id];
+
+      let distanceToNeighbor = currentMinDistanceNode.distanceFromStart + 1;
+      if (
+        !neighborNode ||
+        distanceToNeighbor >= neighborNode.distanceFromStart
+      ) {
+        continue;
+      }
+
+      neighborNode.cameFrom = currentMinDistanceNode;
+      neighborNode.distanceFromStart = distanceToNeighbor;
+      neighborNode.estimatedDistanceToEnd =
+        distanceToNeighbor + caculateManhattanDistance(neighborNode, endNode);
+
+      if (!nodesToVisit.containsNode(neighborNode)) {
+        nodesToVisit.insert(neighborNode);
+      } else {
+        nodesToVisit.update(neighborNode);
+      }
+    }
+  }
+  const path = constructPath(endNode);
+
+  visualize(path, "aAlgorithm");
+
+  return path;
+};
+
+function constructPath(endNode) {
+  if (endNode.cameFrom == null) return [];
+  let current = endNode;
+  const path = [];
+  let x = 1;
+  while (current != null) {
+    path.push(current.id);
+    current = current.cameFrom;
+  }
+  return path.reverse();
+}
+
+const caculateManhattanDistance = (startNode, endNode) => {
+  const widthOfBox = document.elementFromPoint(
+    startNode.x,
+    startNode.y
+  ).offsetWidth;
+
+  return Math.abs(startNode.x - endNode.x) + Math.abs(startNode.y - endNode.y);
+};
+
+const initializeNodes = (elements) => {
+  if (!elements) return;
+  function Node(x, y, id) {
+    this.x = x;
+    this.y = y;
+    this.id = id;
+
+    this.cameFrom = null;
+    this.distanceFromStart = Number.POSITIVE_INFINITY;
+    this.estimatedDistanceToEnd = Number.POSITIVE_INFINITY;
+  }
+
+  let nodes = {};
+  elements.forEach((element) => {
+    const y = element.getBoundingClientRect().top;
+    const { x } = element.getBoundingClientRect();
+    nodes[element.id] = new Node(x, y, element.id);
+  });
+
+  return nodes;
+};
+
+function MinHeap(arr) {
+  this.heap = [];
+  this.nodesPositionInHeap = {};
+  for (let i = 0; i < arr.length; i++) {
+    let node = arr[i];
+    this.nodesPositionInHeap[node.id] = i;
+  }
+
+  this.siftDown = function (currentIdx, endIdx, arr) {
+    let childOneIdx = currentIdx * 2 + 1;
+    while (currentIdx <= endIdx) {
+      let childTwoIdx = currentIdx * 2 + 2 <= endIdx ? currentIdx * 2 + 2 : -1;
+      let idxToSwap;
+      if (
+        childTwoIdx != -1 &&
+        arr[childTwoIdx].estimatedDistanceToEnd <
+          this.heap[childOneIdx].estimatedDistanceToEnd
+      ) {
+        idxToSwap = childTwoIdx;
+      } else {
+        idxToSwap = childOneIdx;
+      }
+
+      if (
+        arr[idxToSwap] &&
+        arr[idxToSwap].estimatedDistanceToEnd <
+          arr[currentIdx].estimatedDistanceToEnd
+      ) {
+        this.swap(currentIdx, idxToSwap);
+        currentIdx = idxToSwap;
+        childOneIdx = currentIdx * 2 + 1;
+      } else {
+        return;
+      }
+    }
+  };
+
+  this.buildHeap = function (arr) {
+    const firstParenIndex = Math.floor((arr.length - 2) / 2);
+    for (let i = firstParenIndex + 1; i >= 0; i--) {
+      this.siftDown(i, arr.length - 1, arr);
+    }
+    return arr;
+  };
+
+  this.heap = this.buildHeap(arr);
+
+  this.siftUp = function (currentIdx) {
+    let parentIdx = Math.floor((currentIdx - 1) / 2);
+    while (
+      parentIdx > 0 &&
+      this.heap[currentIdx].estimatedDistanceToEnd <
+        this.heap[parentIdx].estimatedDistanceToEnd
+    ) {
+      this.swap(currentIdx, parentIdx);
+      currentIdx = parentIdx;
+      parentIdx = Math.floor((currentIdx - 1) / 2);
+    }
+  };
+
+  this.remove = function () {
+    if (this.heap.length == 0) return null;
+
+    const heapLength = this.heap.length;
+    this.swap(0, heapLength - 1);
+    const nodeToRemove = this.heap.pop();
+    this.siftDown(0, this.heap.length - 1, this.heap);
+    return nodeToRemove;
+  };
+
+  this.insert = function (node) {
+    this.heap.push(node);
+    this.nodesPositionInHeap[node.id] = this.heap.length - 1;
+    this.siftUp(this.heap.length - 1);
+  };
+
+  this.update = function (node) {
+    const nodePosition = this.nodesPositionInHeap[node.id];
+    this.siftUp(nodePosition);
+  };
+
+  this.containsNode = function (node) {
+    return node.id in this.nodesPositionInHeap;
+  };
+
+  this.swap = function (i, j) {
+    this.nodesPositionInHeap[this.heap[i].id] = j;
+    this.nodesPositionInHeap[this.heap[j].id] = i;
+    const tmpNode = this.heap[i];
+    this.heap[i] = this.heap[j];
+    this.heap[j] = tmpNode;
+  };
+
+  this.isEmpty = function () {
+    return this.heap.length === 0;
+  };
+}
+
+const shakeButton = () => {
+  const button = document.querySelector("#menu-button");
+  button.classList.add("shaking");
+  setTimeout(() => button.classList.remove("shaking"), 1000);
+};
+
+const removeWalls = () => {
+  const blocks = document.querySelectorAll(".bg-slate-900");
+  blocks.forEach((b) => {
+    b.classList.remove("bg-slate-900", "border-none", "block");
+  });
+};
+
+const removeVisitedBoxes = () => {
+  const visited = document.querySelectorAll(".visited");
+  visited.forEach((el) => el.classList.remove("visited"));
+};
+
+const onReset = () => {
+  removeWalls();
+  removeVisitedBoxes();
+};
+
+export {
+  findShortestPath,
+  initStartAndEndPoints,
+  addModalView,
+  shakeButton,
+  removeWalls,
+  onReset,
+};

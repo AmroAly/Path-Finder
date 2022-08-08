@@ -1,22 +1,18 @@
-import { useEffect } from "react";
-
-const Boxes = ({ flip }) => {
+const Boxes = () => {
   const selectBoxes = (e) => {
     const {
       target: { id },
       target,
     } = e;
     if (id && id.startsWith("box")) {
-      target.classList.add("bg-slate-900", "border-none");
-      target.classList.add("block");
+      if (target.classList.contains("block")) {
+        target.classList.remove("bg-slate-900", "border-none", "block");
+      } else {
+        target.classList.add("bg-slate-900", "border-none", "block");
+      }
     } else {
       onMouseUpHandler();
     }
-  };
-
-  const onDrag = (e) => {
-    e.stopPropagation();
-    console.log("start");
   };
 
   const onMouseDownHandler = (e) => {
@@ -26,13 +22,6 @@ const Boxes = ({ flip }) => {
   const onMouseUpHandler = () => {
     document.removeEventListener("mouseout", selectBoxes);
   };
-
-  useEffect(() => {
-    const blocks = document.querySelectorAll(".bg-slate-900");
-    blocks.forEach((b) => {
-      b.classList.remove("bg-slate-900", "border-none", "block");
-    });
-  }, [flip]);
 
   const boxes = [];
   for (let i = 0; i < 2600; i++) {

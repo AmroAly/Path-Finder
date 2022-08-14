@@ -5,10 +5,10 @@ const Boxes = () => {
       target,
     } = e;
     if (id && id.startsWith("box")) {
-      if (target.classList.contains("block")) {
-        target.classList.remove("bg-slate-900", "border-none", "block");
+      if (target.classList.contains("wall")) {
+        target.classList.remove("wall");
       } else {
-        target.classList.add("bg-slate-900", "border-none", "block");
+        target.classList.add("wall");
       }
     } else {
       onMouseUpHandler();

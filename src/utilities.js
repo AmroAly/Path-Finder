@@ -8,6 +8,7 @@ const findShortestPath = (algorithm) => {
   if (start == end) return;
 
   removeVisitedBoxes();
+  removePath();
 
   if (algorithm === "aAlgorithm") {
     aAlgorithm(startBox, endBox);
@@ -51,25 +52,27 @@ const dijkstraAlgorithm = (start, end) => {
       if (visited.has(endId)) {
         // path found
         let prev = endId;
-        path.push(prev);
+        path.push(`box-${prev}`);
         while (predecessors[prev] != -1) {
           prev = predecessors[prev];
-          path.push(prev);
+          path.push(`box-${prev}`);
         }
         path.reverse();
+        setTimeout(() => {
+          visualizePathFound(path);
+        }, 2000);
         pathFound = true;
         break;
       }
 
       if (
         (!destination && destination != 0) ||
-        edges[edge].classList.contains("block") ||
+        edges[edge].classList.contains("wall") ||
         visited.has(destination)
       ) {
         continue;
       }
 
-      // setTimeout(() => edges[edge].classList.add("visited"), 2 * i++);
       const newPathDistance = distance;
       const currentDestinationDistance = minDistances[destination];
 
@@ -120,11 +123,19 @@ const getNeighbors = (element) => {
 
 const visualize = (elementsIDs, algorithm) => {
   const timeoutInMS = algorithm === "Dijkstra" ? 5 : 50;
-  console.log(timeoutInMS);
+  // console.log(timeoutInMS);
   elementsIDs.forEach((elId, x) => {
     setTimeout(() => {
       document.querySelector(`#${elId}`).classList.add("visited");
     }, timeoutInMS * x);
+  });
+};
+
+const visualizePathFound = (elementsIDs) => {
+  elementsIDs.forEach((elId, x) => {
+    setTimeout(() => {
+      document.querySelector(`#${elId}`).classList.add("path");
+    }, 50 * x);
   });
 };
 
@@ -154,16 +165,17 @@ const initStartAndEndPoints = () => {
     endBox.id.startsWith("box")
   ) {
     startBox.innerHTML =
-      "<div class='h-full bg-cyan-900 border border-slate-200 rounded-full' id='start-box' draggable='true'></div>";
+      "<div class='h-full bg-cyan-900 border border-slate-200 rounded' id='start-box' draggable='true'><p>&#10140;</p></div>";
 
     endBox.innerHTML =
-      "<div class='h-full bg-cyan-900	 border border-slate-200 rounded-full' id='end-box' draggable='true'></div>";
+      "<div class='h-full bg-cyan-900	 border border-slate-200 rounded' id='end-box' draggable='true'><p>&#10140;</p></div>";
   }
 };
 
 (function () {
   // By default, data/elements cannot be dropped in other elements. To allow a drop, we must prevent the default handling of the element
   document.addEventListener("dragover", function (event) {
+    // event.target.style.opacity = ".1";
     event.preventDefault();
   });
 
@@ -176,6 +188,7 @@ const initStartAndEndPoints = () => {
   document.addEventListener("dragstart", (e) => {
     e.dataTransfer.effectAllowed = "move";
     e.dataTransfer.setData("id", e.target.id);
+    e.target.classList.add("start-end-box-animate");
   });
 })();
 
@@ -228,7 +241,7 @@ const aAlgorithm = (startBox, endBox) => {
     for (let neighbor in neighbors) {
       if (
         !neighbors[neighbor] ||
-        neighbors[neighbor].classList.contains("block")
+        neighbors[neighbor].classList.contains("wall")
       ) {
         continue;
       }
@@ -257,7 +270,8 @@ const aAlgorithm = (startBox, endBox) => {
   }
   const path = constructPath(endNode);
 
-  visualize(path, "aAlgorithm");
+  console.log(path);
+  visualizePathFound(path);
 
   return path;
 };
@@ -410,9 +424,16 @@ const shakeButton = () => {
 };
 
 const removeWalls = () => {
-  const blocks = document.querySelectorAll(".bg-slate-900");
+  const blocks = document.querySelectorAll(".wall");
   blocks.forEach((b) => {
-    b.classList.remove("bg-slate-900", "border-none", "block");
+    b.classList.remove("bg-slate-900", "border-none", "wall");
+  });
+};
+
+const removePath = () => {
+  const path = document.querySelectorAll(".path");
+  path.forEach((b) => {
+    b.classList.remove("path");
   });
 };
 
@@ -424,6 +445,7 @@ const removeVisitedBoxes = () => {
 const onReset = () => {
   removeWalls();
   removeVisitedBoxes();
+  removePath();
 };
 
 export {

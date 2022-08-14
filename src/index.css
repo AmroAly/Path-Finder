@@ -6,10 +6,79 @@
     margin-top: -6px;
 }
 
+@keyframes animateVisited {
+
+    0%,
+    50% {
+        transform: scale(.5);
+        border-radius: 5px;
+        background-color: cornflowerblue;
+    }
+
+    10%,
+    80% {
+        transform: scale(.75);
+        /* background-color: rgb(42, 194, 88); */
+    }
+
+    20%,
+    90% {
+        transform: scale(1.25);
+    }
+
+    90%,
+    100% {
+        border-radius: 5px;
+        transform: scale(1);
+        background-color: yellow;
+    }
+
+    95%,
+    100% {
+    }
+   
+}
+
 .visited{
     background-color: teal;
+    transition: all 500ms;    
+    animation: animateVisited .5s cubic-bezier(.36, .07, .19, .97);
+}
+
+@keyframes animatePath {
+
+    0%,
+    40% {
+        transform: scale(1.25);
+        border-radius: 20%;
+        left: -10px;
+        background-color: rgb(9, 65, 62);
+    } 
+
+    40% {
+        transform: scale(.75);
+        background-color: rgb(43, 215, 206);
+        left: 10px;
+    }
+
+    90% {
+        transform: scale(1);
+        background-color: rgb(9, 65, 62);
+        /* background-color: rgb(8, 213, 202); */
+    }
+  
+    /*
+    40%,
+    60% {
+        transform: scale(1);
+    } */
+}
+
+.path {
+    background-color: yellow;
+    border: none;
     transition: all 500ms;
-    /* border: none; */
+    animation: animatePath 1s cubic-bezier(.36, .07, .19, .97) both;
 }
 
 .v-grid {
@@ -142,4 +211,52 @@
     60% {
         transform: translate3d(3px, 0, 0);
     }
+}
+
+@keyframes scaleUpAndDown {
+
+    10%,
+    90% {
+        transform: scale(.5);
+        border-radius: 5px;
+    }
+
+    20%,
+    80% {
+        transform: scale(1);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: scale(1.5);
+    }
+
+    40%,
+    60% {
+        transform: scale(1);
+    }
+}
+
+
+.wall {
+    background-color: rgb(6, 44, 60);
+    border: none;
+    animation: scaleUpAndDown 1s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+.start-end-box-animate {
+    animation: scaleUpAndDown 1s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+#start-box {
+   color: white;
+}
+
+#end-box {
+    color: white;
+}
+
+#end-box > p {
+    transform: rotate(180deg);
 }

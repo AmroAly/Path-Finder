@@ -10,7 +10,6 @@ const Dropdown = ({ onChangeAlgorithm }) => {
 
   const onSelectAlgorithmHandler = (e) => {
     e.preventDefault();
-    console.log(e.target.id, "clicked");
     setDropDownText(e.target.id);
     onChangeAlgorithm(e.target.id);
   };

@@ -8,6 +8,7 @@ const findShortestPath = (algorithm) => {
   if (start == end) return;
 
   removeVisitedBoxes();
+
   removePath();
 
   if (algorithm === "aAlgorithm") {
@@ -58,9 +59,6 @@ const dijkstraAlgorithm = (start, end) => {
           path.push(`box-${prev}`);
         }
         path.reverse();
-        setTimeout(() => {
-          visualizePathFound(path);
-        }, 2000);
         pathFound = true;
         break;
       }
@@ -84,7 +82,7 @@ const dijkstraAlgorithm = (start, end) => {
     }
   }
 
-  visualize(nodesToVisualize, "Dijkstra");
+  visualize(nodesToVisualize, "Dijkstra").then(() => visualizePathFound(path));
 
   return minDistances;
 };
@@ -122,21 +120,37 @@ const getNeighbors = (element) => {
 };
 
 const visualize = (elementsIDs, algorithm) => {
+  const promises = [];
   const timeoutInMS = algorithm === "Dijkstra" ? 5 : 50;
   // console.log(timeoutInMS);
   elementsIDs.forEach((elId, x) => {
-    setTimeout(() => {
-      document.querySelector(`#${elId}`).classList.add("visited");
-    }, timeoutInMS * x);
+    const promise = new Promise((resolve) => {
+      setTimeout(() => {
+        document.querySelector(`#${elId}`).classList.add("visited");
+        resolve();
+      }, timeoutInMS * x);
+    });
+
+    promises.push(promise);
   });
+
+  return Promise.all(promises);
 };
 
 const visualizePathFound = (elementsIDs) => {
+  const promises = [];
   elementsIDs.forEach((elId, x) => {
-    setTimeout(() => {
-      document.querySelector(`#${elId}`).classList.add("path");
-    }, 50 * x);
+    const promise = new Promise((resolve) => {
+      setTimeout(() => {
+        document.querySelector(`#${elId}`).classList.add("path");
+        resolve();
+      }, 50 * x);
+    });
+
+    promises.push(promise);
   });
+
+  return Promise.all(promises);
 };
 
 const initStartAndEndPoints = () => {
@@ -193,7 +207,6 @@ const initStartAndEndPoints = () => {
 })();
 
 const addModalView = (elementToDisplay) => {
-  console.log(elementToDisplay);
   let elementIdToDisplay;
   if (elementToDisplay === 1) elementIdToDisplay = "tutorial-one";
   if (elementToDisplay === 2) elementIdToDisplay = "tutorial-two";
@@ -270,8 +283,9 @@ const aAlgorithm = (startBox, endBox) => {
   }
   const path = constructPath(endNode);
 
-  console.log(path);
-  visualizePathFound(path);
+  visualizePathFound(path).then(() => {
+    console.log("finished");
+  });
 
   return path;
 };
